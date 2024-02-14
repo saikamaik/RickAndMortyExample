@@ -12,9 +12,27 @@ class CharacterRepository @Inject constructor(
     private val rickAndMortyService: RickAndMortyService
 ) {
 
-    fun makeApiCall(liveDataList: MutableLiveData<List<CharacterModel>>) {
+    fun makeApiCall(liveDataList: MutableLiveData<List<CharacterModel>?>) {
         val call: Call<APIResponseCharacter> = rickAndMortyService.getAllCharacters()
-        call.enqueue(object: Callback<APIResponseCharacter> {
+        call.enqueue(object : Callback<APIResponseCharacter> {
+            override fun onResponse(
+                call: Call<APIResponseCharacter>,
+                response: Response<APIResponseCharacter>
+            ) {
+                liveDataList.postValue(response.body()?.results!!)
+            }
+
+            override fun onFailure(call: Call<APIResponseCharacter>, t: Throwable) {
+                liveDataList.postValue(null)
+            }
+
+        }
+        )
+    }
+
+    fun getCharactersByPage(liveDataList: MutableLiveData<List<CharacterModel>?>, page: Int) {
+        val call: Call<APIResponseCharacter> = rickAndMortyService.getCharactersByPage(page)
+        call.enqueue(object : Callback<APIResponseCharacter> {
             override fun onResponse(
                 call: Call<APIResponseCharacter>,
                 response: Response<APIResponseCharacter>

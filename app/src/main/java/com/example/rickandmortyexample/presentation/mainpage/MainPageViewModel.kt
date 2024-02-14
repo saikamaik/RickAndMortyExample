@@ -12,14 +12,23 @@ class MainPageViewModel @Inject constructor(
     private val repository: CharacterRepository
 ) : ViewModel() {
 
-    private var liveDataList: MutableLiveData<List<CharacterModel>> = MutableLiveData()
+    private var liveDataList: MutableLiveData<List<CharacterModel>?> = MutableLiveData()
 
-    fun getLiveDataObserver(): MutableLiveData<List<CharacterModel>> {
+    fun getLiveDataObserver(): MutableLiveData<List<CharacterModel>?> {
         return liveDataList
     }
 
+//    fun clearLiveData() {
+//        liveDataList = MutableLiveData()
+//        repository.makeApiCall(liveDataList)
+//    }
+
     fun loadListOfData() {
         repository.makeApiCall(liveDataList)
+    }
+
+    fun loadNextPageOfData(page: Int){
+        repository.getCharactersByPage(liveDataList, page)
     }
 
 }

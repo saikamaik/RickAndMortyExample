@@ -1,39 +1,45 @@
 package com.example.rickandmortyexample.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.domain.entity.CharacterModel
-import com.example.rickandmortyexample.R
+import com.example.rickandmortyexample.databinding.ItemRecyclerViewBinding
 
-class RecyclerAdapter (
+class RecyclerAdapter(
     private val callback: Callback
 ) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
-    private var characters: List<CharacterModel>? = null
+    private var characters: List<CharacterModel> = mutableListOf()
 
-    fun setCharactersData(
-        characters: List<CharacterModel>?
+    fun setCharacterData(
+        characters: List<CharacterModel>
     ) {
-        this.characters = characters
+        this.characters += characters
     }
+
+//    fun clearCharacterData() {
+//        characters.clear()
+//    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
-    ): RecyclerAdapter.MyViewHolder {
-        val itemView = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_recycler_view, parent, false)
-        return MyViewHolder(itemView, callback)
+    ): MyViewHolder {
+        return MyViewHolder(
+            ItemRecyclerViewBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), callback
+        )
     }
 
-    override fun getItemCount(): Int{
-        if (characters == null) return 0
-        return characters?.size!!
+    override fun getItemCount(): Int {
+        return characters.size
     }
 
     interface Callback {
@@ -41,19 +47,29 @@ class RecyclerAdapter (
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(characters?.get(position)!!)
+        holder.bind(characters[position])
     }
 
-    class MyViewHolder(listItemView: View, private val callback: Callback) :
-        RecyclerView.ViewHolder(listItemView) {
+    class MyViewHolder(
+        binding: ItemRecyclerViewBinding,
+        private val callback: Callback
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        val characterImage: ImageView = listItemView.findViewById(R.id.image_info)
-        val characterCard: CardView = listItemView.findViewById(R.id.card_view)
-        val characterName: TextView = listItemView.findViewById(R.id.tv_name)
+        val characterImage: ImageView = binding.imageRecyclerView
+        val characterCard: CardView = binding.cardView
+        private val characterName: TextView = binding.tvNameRecyclerview
+        private val characterStatus: TextView = binding.tvStatusRecyclerview
+        private val characterSpecies: TextView = binding.tvSpeciesRecyclerview
+        private val characterLocation: TextView = binding.tvLocation
 
         fun bind(characterModel: CharacterModel) {
 
             characterName.text = characterModel.name
+            characterImage.load(characterModel.image)
+            characterSpecies.text = characterModel.species
+            characterStatus.text = characterModel.status
+            characterLocation.text = characterModel.location.name
 
             characterCard.setOnClickListener {
                 callback.onItemClicked(characterModel)

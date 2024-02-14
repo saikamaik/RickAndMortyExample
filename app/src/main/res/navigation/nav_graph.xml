@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainPageFragment">
 
@@ -16,6 +15,10 @@
 
     <fragment
         android:id="@+id/itemInfoFragment"
-        android:name="com.example.rickandmortyexample.presentation.ItemInfoFragment"
-        android:label="ItemInfoFragment" />
+        android:name="com.example.rickandmortyexample.presentation.characterdetail.ItemInfoFragment"
+        android:label="ItemInfoFragment" >
+        <action
+            android:id="@+id/action_itemInfoFragment_to_mainPageFragment"
+            app:destination="@id/mainPageFragment" />
+    </fragment>
 </navigation>

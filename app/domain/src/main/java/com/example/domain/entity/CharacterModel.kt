@@ -6,12 +6,24 @@ data class CharacterModel(
     var name: String,
     var status: String,
     var species: String,
+    var type: String,
     var gender: String,
-    var origin: LocationModel,
-    var location: LocationModel,
-    var imageURL: String,
+    var origin: Origin,
+    var location: Location,
+    var image: String,
     var url: String,
     val created: String,
     var episode: List<String>
 
 )
+
+data class Origin(
+    var name: String,
+    var url: String
+)
+
+data class Location(
+    var name: String,
+    var url: String
+)
+
