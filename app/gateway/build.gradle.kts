@@ -37,10 +37,15 @@ android {
 }
 
 dependencies {
+    val room_version = "2.6.1"
 
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation(project(":app:domain"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -53,7 +58,7 @@ dependencies {
     implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation ("io.reactivex.rxjava2:rxjava:2.2.9")
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
 
 }

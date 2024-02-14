@@ -1,5 +1,6 @@
 package com.example.rickandmortyexample.presentation.mainpage
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.entity.CharacterModel
@@ -12,16 +13,15 @@ class MainPageViewModel @Inject constructor(
     private val repository: CharacterRepository
 ) : ViewModel() {
 
-    private var liveDataList: MutableLiveData<List<CharacterModel>?> = MutableLiveData()
+    var liveDataList: MutableLiveData<List<CharacterModel>?> = MutableLiveData()
 
     fun getLiveDataObserver(): MutableLiveData<List<CharacterModel>?> {
         return liveDataList
     }
 
-//    fun clearLiveData() {
-//        liveDataList = MutableLiveData()
-//        repository.makeApiCall(liveDataList)
-//    }
+    fun getAllCharacterData(): LiveData<List<CharacterModel>> {
+        return repository.getAllCharactersFromDB()
+    }
 
     fun loadListOfData() {
         repository.makeApiCall(liveDataList)

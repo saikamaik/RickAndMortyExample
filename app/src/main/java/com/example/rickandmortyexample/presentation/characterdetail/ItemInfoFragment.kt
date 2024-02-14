@@ -21,15 +21,14 @@ import com.example.rickandmortyexample.databinding.FragmentItemInfoBinding
 
 class ItemInfoFragment : Fragment() {
 
-    private var _binding: FragmentItemInfoBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentItemInfoBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentItemInfoBinding.inflate(inflater, container, false)
+        binding = FragmentItemInfoBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -52,7 +51,7 @@ class ItemInfoFragment : Fragment() {
         }
         binding.tvName.text = "Name: " + arguments?.getString(CHARACTER_NAME)
         binding.tvStatus.text = "Status:" + arguments?.getString(CHARACTER_STATUS)
-        binding.tvSpecies.text = "Species" + arguments?.getString(CHARACTER_SPECIES)
+        binding.tvSpecies.text = "Species: " + arguments?.getString(CHARACTER_SPECIES)
         if (!arguments?.getString(CHARACTER_TYPE).isNullOrEmpty()) {
             binding.tvType.text = "Type: " + arguments?.getString(CHARACTER_TYPE)
         } else binding.tvType.text = "Type: ???"
@@ -61,11 +60,5 @@ class ItemInfoFragment : Fragment() {
         binding.tvLocation.text = "Location: " + arguments?.getString(CHARACTER_LOCATION)
         binding.tvEpisode.text = "Episodes: " + arguments?.getString(CHARACTER_EPISODE)
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 
 }

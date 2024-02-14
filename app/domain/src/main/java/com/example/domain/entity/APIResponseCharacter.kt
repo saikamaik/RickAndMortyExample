@@ -10,6 +10,11 @@ data class APIResponseLocation(
     var results: List<LocationModel>
 )
 
+data class APIResponseEpisode(
+    var info: Info,
+    var results: List<Episode>
+)
+
 data class Info (
     var count: Int,
     var pages: Int,

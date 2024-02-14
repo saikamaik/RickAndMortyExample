@@ -1,6 +1,7 @@
 package com.example.gateway.remoteDataSource
 
 import com.example.domain.entity.APIResponseCharacter
+import com.example.domain.entity.APIResponseEpisode
 import com.example.domain.entity.APIResponseLocation
 import io.reactivex.Single
 import retrofit2.Call
@@ -25,4 +26,9 @@ interface RickAndMortyService {
     fun getOneCharacter(
         @Path("id") id: Int?
     ): Single<APIResponseCharacter>
+
+    @GET("episode/{id}")
+    fun getEpisode(
+        @Path("id") id: Int?
+    ): Single<APIResponseEpisode>
 }

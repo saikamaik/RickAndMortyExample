@@ -44,17 +44,14 @@ class MainPageFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var linearLayoutManager: GridLayoutManager
     private lateinit var progressBar: ProgressBar
-
-    private var isLoading = false
     private var page: Int = 1
-    private var isLastPage = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainPageBinding.inflate(inflater, container, false)
+        _binding = FragmentMainPageBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -80,16 +77,25 @@ class MainPageFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun initViewModel() {
-        viewModel.getLiveDataObserver().observe(viewLifecycleOwner, Observer {
+        viewModel.getLiveDataObserver().observe(viewLifecycleOwner) {
             if (it != null) {
                 adapter.setCharacterData(it)
                 adapter.notifyDataSetChanged()
-            } else {
-
             }
-        })
-        viewModel.loadListOfData()
+        }
+        viewModel.loadNextPageOfData(page)
     }
+
+//    @SuppressLint("NotifyDataSetChanged")
+//    fun initViewModelWithRoom() {
+//        viewModel.getAllCharacterData().observe(viewLifecycleOwner, Observer {
+//            if (it != null) {
+//                adapter.setCharacterData(it)
+//                adapter.notifyDataSetChanged()
+//            }
+//        })
+//        viewModel.loadNextPageOfData(page)
+//    }
 
     fun setUpLayoutManager(spanCount: Int, spanCountLand: Int) {
         linearLayoutManager = GridLayoutManager(this.context, spanCount)
@@ -120,11 +126,11 @@ class MainPageFragment : Fragment() {
         progressBar = binding.progressbar
 
         swipeRefreshLayout.setOnRefreshListener {
-//            viewModel.clearLiveData()
-//            swipeRefreshLayout.isVisible = false
+//            adapter.clearCharacterData()
 //            page = 1
-//            initViewModel()
-            //TODO рефреш лайв даты?
+//            viewModel.loadListOfData()
+            swipeRefreshLayout.isRefreshing = false
+            //TODO: рефреш
         }
 
         progressBar.isVisible = false
@@ -142,11 +148,8 @@ class MainPageFragment : Fragment() {
         args.putString(CHARACTER_IMAGEURL, characterModel.image)
         args.putString(CHARACTER_EPISODE, characterModel.episode.toString())
         findNavController().navigate(R.id.itemInfoFragment, args)
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+            //todo
     }
 
 }

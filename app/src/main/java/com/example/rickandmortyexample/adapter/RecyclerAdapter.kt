@@ -1,5 +1,6 @@
 package com.example.rickandmortyexample.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,16 +15,20 @@ class RecyclerAdapter(
     private val callback: Callback
 ) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
-    private var characters: List<CharacterModel> = mutableListOf()
+    private var characters: List<CharacterModel> = arrayListOf()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setCharacterData(
         characters: List<CharacterModel>
     ) {
         this.characters += characters
+
     }
 
+//    @SuppressLint("NotifyDataSetChanged")
 //    fun clearCharacterData() {
 //        characters.clear()
+//        notifyDataSetChanged()
 //    }
 
     override fun onCreateViewHolder(
@@ -56,8 +61,8 @@ class RecyclerAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        val characterImage: ImageView = binding.imageRecyclerView
-        val characterCard: CardView = binding.cardView
+        private val characterImage: ImageView = binding.imageRecyclerView
+        private val characterCard: CardView = binding.cardView
         private val characterName: TextView = binding.tvNameRecyclerview
         private val characterStatus: TextView = binding.tvStatusRecyclerview
         private val characterSpecies: TextView = binding.tvSpeciesRecyclerview
