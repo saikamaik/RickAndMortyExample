@@ -13,6 +13,9 @@ interface AppDao {
     @Query("SELECT * FROM charactermodel")
     fun getAllCharacters(): LiveData<List<CharacterModel>>
 
+    @Query("SELECT * FROM charactermodel WHERE id = :characterId")
+    fun getOneCharacters(characterId: Int): LiveData<CharacterModel>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertCharacters(characterModel: CharacterModel)
 

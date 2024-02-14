@@ -19,6 +19,10 @@ class CharacterRepository @Inject constructor(
         return appDao.getAllCharacters()
     }
 
+    fun getOneCharacterFromDB(id: Int): LiveData<CharacterModel>{
+        return appDao.getOneCharacters(id)
+    }
+
     fun insertCharacters(characterModel: CharacterModel) {
         appDao.insertCharacters(characterModel)
     }

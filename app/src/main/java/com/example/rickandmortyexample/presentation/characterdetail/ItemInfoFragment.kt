@@ -6,23 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
-import com.example.rickandmortyexample.Const.CHARACTER_EPISODE
-import com.example.rickandmortyexample.Const.CHARACTER_GENDER
-import com.example.rickandmortyexample.Const.CHARACTER_IMAGEURL
-import com.example.rickandmortyexample.Const.CHARACTER_LOCATION
-import com.example.rickandmortyexample.Const.CHARACTER_NAME
-import com.example.rickandmortyexample.Const.CHARACTER_ORIGIN
-import com.example.rickandmortyexample.Const.CHARACTER_SPECIES
-import com.example.rickandmortyexample.Const.CHARACTER_STATUS
-import com.example.rickandmortyexample.Const.CHARACTER_TYPE
+import com.example.domain.entity.CharacterModel
 import com.example.rickandmortyexample.databinding.FragmentItemInfoBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ItemInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentItemInfoBinding
+    private val viewModel: ItemInfoViewModel by viewModels()
+    private lateinit var characterModel: CharacterModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,10 +30,16 @@ class ItemInfoFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpCard()
+        val characterId: Int = args.characterId
+        initViewModel(characterId)
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
@@ -44,23 +47,38 @@ class ItemInfoFragment : Fragment() {
 
     }
 
-    @SuppressLint("SetTextI18n")
-    fun setUpCard() {
+    val args: ItemInfoFragmentArgs by navArgs()
 
-        val imgURL: String? = arguments?.getString(CHARACTER_IMAGEURL)
+    @SuppressLint("SetTextI18n")
+    fun setUpCard(characterModel: CharacterModel) {
+
+        val imgURL: String = characterModel.image
         binding.imageInfo.load(imgURL) {
             size(800, 800)
         }
-        binding.tvName.text = "Name: " + arguments?.getString(CHARACTER_NAME)
-        binding.tvStatus.text = "Status:" + arguments?.getString(CHARACTER_STATUS)
-        binding.tvSpecies.text = "Species: " + arguments?.getString(CHARACTER_SPECIES)
-        if (!arguments?.getString(CHARACTER_TYPE).isNullOrEmpty()) {
-            binding.tvType.text = "Type: " + arguments?.getString(CHARACTER_TYPE)
-        } else binding.tvType.text = "Type: ???"
-        binding.tvGender.text = "Gender: " + arguments?.getString(CHARACTER_GENDER)
-        binding.tvOrigin.text = "Origin: " + arguments?.getString(CHARACTER_ORIGIN)
-        binding.tvLocation.text = "Location: " + arguments?.getString(CHARACTER_LOCATION)
-        binding.tvEpisode.text = "Episodes: " + arguments?.getString(CHARACTER_EPISODE)
+        binding.tvName.text = "Name: " + characterModel.name
+        binding.tvStatus.text = "Status: " + characterModel.status
+        binding.tvSpecies.text = "Species: " + characterModel.species
+
+        if (characterModel.type.isEmpty()) {
+            binding.tvType.text = "Type: ???"
+        } else {
+            binding.tvType.text = "Type: " + characterModel.type
+        }
+
+        binding.tvGender.text = "Gender: " + characterModel.gender
+        binding.tvOrigin.text = "Origin: " + characterModel.origin.name
+        binding.tvLocation.text = "Location: " + characterModel.location.name
+        binding.tvEpisode.text = "Episode: " + characterModel.episode
+
     }
 
+    private fun initViewModel(id: Int) {
+
+        viewModel.getOneCharacterFromDB(id).observe(viewLifecycleOwner) {
+            if (it != null)
+                characterModel = it
+            setUpCard(characterModel)
+        }
+    }
 }

@@ -14,16 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.entity.CharacterModel
-import com.example.rickandmortyexample.Const.CHARACTER_EPISODE
-import com.example.rickandmortyexample.Const.CHARACTER_GENDER
-import com.example.rickandmortyexample.Const.CHARACTER_IMAGEURL
-import com.example.rickandmortyexample.Const.CHARACTER_LOCATION
-import com.example.rickandmortyexample.Const.CHARACTER_NAME
-import com.example.rickandmortyexample.Const.CHARACTER_ORIGIN
-import com.example.rickandmortyexample.Const.CHARACTER_SPECIES
-import com.example.rickandmortyexample.Const.CHARACTER_STATUS
-import com.example.rickandmortyexample.Const.CHARACTER_TYPE
-import com.example.rickandmortyexample.R
 import com.example.rickandmortyexample.adapter.RecyclerAdapter
 import com.example.rickandmortyexample.databinding.FragmentMainPageBinding
 import com.example.secondgallery.adapter.PaginationScrollListener
@@ -32,8 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainPageFragment : Fragment() {
 
-    private var _binding: FragmentMainPageBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentMainPageBinding
 
     private val viewModel: MainPageViewModel by viewModels()
 
@@ -48,7 +37,7 @@ class MainPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainPageBinding.inflate(layoutInflater)
+        binding = FragmentMainPageBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -83,7 +72,7 @@ class MainPageFragment : Fragment() {
         viewModel.loadNextPageOfData(page)
     }
 
-    fun setUpLayoutManager(spanCount: Int, spanCountLand: Int) {
+    private fun setUpLayoutManager(spanCount: Int = 1, spanCountLand: Int = 2) {
         linearLayoutManager = GridLayoutManager(this.context, spanCount)
         val orientation = resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -92,7 +81,7 @@ class MainPageFragment : Fragment() {
     }
 
     private fun initRecyclerAdapter() {
-        setUpLayoutManager(1, 2)
+        setUpLayoutManager()
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
 
@@ -113,17 +102,12 @@ class MainPageFragment : Fragment() {
     }
 
     fun navigateToCharactersDetailFragment(characterModel: CharacterModel) {
-        val args = Bundle()
-        args.putString(CHARACTER_NAME, characterModel.name)
-        args.putString(CHARACTER_STATUS, characterModel.status)
-        args.putString(CHARACTER_SPECIES, characterModel.species)
-        args.putString(CHARACTER_TYPE, characterModel.type)
-        args.putString(CHARACTER_GENDER, characterModel.gender)
-        args.putString(CHARACTER_ORIGIN, characterModel.origin.name)
-        args.putString(CHARACTER_LOCATION, characterModel.location.name)
-        args.putString(CHARACTER_IMAGEURL, characterModel.image)
-        args.putString(CHARACTER_EPISODE, characterModel.episode.toString())
-        findNavController().navigate(R.id.itemInfoFragment, args)
+
+            val action = MainPageFragmentDirections.actionMainPageFragmentToItemInfoFragment(
+                characterModel.id
+            )
+
+        findNavController().navigate(action)
 
     }
 
