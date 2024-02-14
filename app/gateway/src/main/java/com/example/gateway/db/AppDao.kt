@@ -13,7 +13,7 @@ interface AppDao {
     @Query("SELECT * FROM charactermodel")
     fun getAllCharacters(): LiveData<List<CharacterModel>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertCharacters(characterModel: CharacterModel)
 
     @Query("DELETE FROM charactermodel")

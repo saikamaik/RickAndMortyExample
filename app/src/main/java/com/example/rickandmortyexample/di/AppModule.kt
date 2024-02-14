@@ -15,9 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    val base_url: String = "https://rickandmortyapi.com/api/"
-
     @Provides
     @Singleton
     fun getAppDatabase(context: Application): AppDatabase {
@@ -43,7 +40,4 @@ object AppModule {
         return retrofit.create(RickAndMortyService::class.java)
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideMainRemoteData(mainService : RickAndMortyService) = CharacterRepository(mainService)
 }

@@ -10,7 +10,7 @@ import com.example.domain.entity.TypeConverterEpisode
 import com.example.domain.entity.TypeConverterLocation
 import com.example.domain.entity.TypeConverterOrigin
 
-@Database(entities = [CharacterModel::class], version = 1, exportSchema = false)
+@Database(entities = [CharacterModel::class], version = 1)
 @TypeConverters(
     TypeConverterOrigin::class,
     TypeConverterLocation::class,
@@ -40,18 +40,6 @@ abstract class AppDatabase : RoomDatabase() {
                 return INSTANCE!!
 
             }
-
-//        private var instance: AppDatabase? = null
-//
-//        fun getDatabase(context: Context): AppDatabase {
-//            if (instance == null) {
-//                instance =
-//                    Room.databaseBuilder(context, AppDatabase::class.java, "characters")
-//                        .allowMainThreadQueries()
-//                        .build()
-//            }
-//            return instance!!
-//        }
         }
     }
 }

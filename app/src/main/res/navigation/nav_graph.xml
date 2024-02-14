@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress NavigationFile -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
@@ -10,7 +11,8 @@
         android:label="MainPageFragment" >
         <action
             android:id="@+id/action_mainPageFragment_to_itemInfoFragment"
-            app:destination="@id/itemInfoFragment" />
+            app:destination="@id/itemInfoFragment">
+        </action>
     </fragment>
 
     <fragment
@@ -20,5 +22,6 @@
         <action
             android:id="@+id/action_itemInfoFragment_to_mainPageFragment"
             app:destination="@id/mainPageFragment" />
+        <argument android:name="character" />
     </fragment>
 </navigation>

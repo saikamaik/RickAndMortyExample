@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.rickandmortyexample.Const.CHARACTER_EPISODE
 import com.example.rickandmortyexample.Const.CHARACTER_GENDER
@@ -45,6 +46,7 @@ class ItemInfoFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     fun setUpCard() {
+
         val imgURL: String? = arguments?.getString(CHARACTER_IMAGEURL)
         binding.imageInfo.load(imgURL) {
             size(800, 800)

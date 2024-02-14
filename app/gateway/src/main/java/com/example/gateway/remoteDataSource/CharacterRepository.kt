@@ -23,29 +23,6 @@ class CharacterRepository @Inject constructor(
         appDao.insertCharacters(characterModel)
     }
 
-    fun makeApiCall(liveDataList: MutableLiveData<List<CharacterModel>?>) {
-        val call: Call<APIResponseCharacter> = rickAndMortyService.getAllCharacters()
-        call.enqueue(object : Callback<APIResponseCharacter> {
-            override fun onResponse(
-                call: Call<APIResponseCharacter>,
-                response: Response<APIResponseCharacter>
-            ) {
-                if (response.isSuccessful) {
-                    appDao.deleteAllCharacters()
-                    response.body()?.results?.forEach {
-                        insertCharacters(it)
-                    }
-                }
-//                liveDataList.postValue(response.body()?.results!!)
-            }
-
-            override fun onFailure(call: Call<APIResponseCharacter>, t: Throwable) {
-                liveDataList.postValue(null)
-            }
-
-        }
-        )
-    }
     fun getCharactersByPage(liveDataList: MutableLiveData<List<CharacterModel>?>, page: Int) {
         val call: Call<APIResponseCharacter> = rickAndMortyService.getCharactersByPage(page)
         call.enqueue(object : Callback<APIResponseCharacter> {
@@ -53,11 +30,11 @@ class CharacterRepository @Inject constructor(
                 call: Call<APIResponseCharacter>,
                 response: Response<APIResponseCharacter>
             ) {
-//                if (response.isSuccessful) {
-//                    response.body()?.results?.forEach {
-//                        insertCharacters(it)
-//                    }
-//                }
+                if (response.isSuccessful) {
+                    response.body()?.results?.forEach {
+                        insertCharacters(it)
+                    }
+                }
                 liveDataList.postValue(response.body()?.results)
             }
             override fun onFailure(call: Call<APIResponseCharacter>, t: Throwable) {

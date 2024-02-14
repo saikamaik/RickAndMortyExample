@@ -10,11 +10,9 @@ import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.domain.entity.CharacterModel
 import com.example.rickandmortyexample.Const.CHARACTER_EPISODE
 import com.example.rickandmortyexample.Const.CHARACTER_GENDER
@@ -41,7 +39,6 @@ class MainPageFragment : Fragment() {
 
     private lateinit var adapter: RecyclerAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var linearLayoutManager: GridLayoutManager
     private lateinit var progressBar: ProgressBar
     private var page: Int = 1
@@ -77,7 +74,7 @@ class MainPageFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun initViewModel() {
-        viewModel.getLiveDataObserver().observe(viewLifecycleOwner) {
+        viewModel.getAllCharacterData().observe(viewLifecycleOwner) {
             if (it != null) {
                 adapter.setCharacterData(it)
                 adapter.notifyDataSetChanged()
@@ -85,17 +82,6 @@ class MainPageFragment : Fragment() {
         }
         viewModel.loadNextPageOfData(page)
     }
-
-//    @SuppressLint("NotifyDataSetChanged")
-//    fun initViewModelWithRoom() {
-//        viewModel.getAllCharacterData().observe(viewLifecycleOwner, Observer {
-//            if (it != null) {
-//                adapter.setCharacterData(it)
-//                adapter.notifyDataSetChanged()
-//            }
-//        })
-//        viewModel.loadNextPageOfData(page)
-//    }
 
     fun setUpLayoutManager(spanCount: Int, spanCountLand: Int) {
         linearLayoutManager = GridLayoutManager(this.context, spanCount)
@@ -122,17 +108,7 @@ class MainPageFragment : Fragment() {
 
     fun initViews() {
         recyclerView = binding.recyclerview
-        swipeRefreshLayout = binding.swipeRefresh
         progressBar = binding.progressbar
-
-        swipeRefreshLayout.setOnRefreshListener {
-//            adapter.clearCharacterData()
-//            page = 1
-//            viewModel.loadListOfData()
-            swipeRefreshLayout.isRefreshing = false
-            //TODO: рефреш
-        }
-
         progressBar.isVisible = false
     }
 
@@ -149,7 +125,6 @@ class MainPageFragment : Fragment() {
         args.putString(CHARACTER_EPISODE, characterModel.episode.toString())
         findNavController().navigate(R.id.itemInfoFragment, args)
 
-            //todo
     }
 
 }

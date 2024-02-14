@@ -15,16 +15,8 @@ class MainPageViewModel @Inject constructor(
 
     var liveDataList: MutableLiveData<List<CharacterModel>?> = MutableLiveData()
 
-    fun getLiveDataObserver(): MutableLiveData<List<CharacterModel>?> {
-        return liveDataList
-    }
-
     fun getAllCharacterData(): LiveData<List<CharacterModel>> {
         return repository.getAllCharactersFromDB()
-    }
-
-    fun loadListOfData() {
-        repository.makeApiCall(liveDataList)
     }
 
     fun loadNextPageOfData(page: Int){
