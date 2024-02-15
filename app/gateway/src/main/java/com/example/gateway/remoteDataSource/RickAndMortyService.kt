@@ -15,16 +15,8 @@ interface RickAndMortyService {
         @Query("page") page: Int
     ): Call<APIResponseCharacter>
 
-    @GET("location/")
-    fun getAllLocations(): Call<APIResponseLocation>
-
-    @GET("character/{id}")
-    fun getOneCharacter(
-        @Path("id") id: Int?
-    ): Call<APIResponseCharacter>
-
-    @GET("episode/{id}")
-    fun getEpisode(
-        @Path("id") id: Int?
+    @GET("episode/")
+    fun getEpisodes(
+        @Query("page") page: Int
     ): Call<APIResponseEpisode>
 }

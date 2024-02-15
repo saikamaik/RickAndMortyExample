@@ -3,16 +3,13 @@ package com.example.rickandmortyexample.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.domain.entity.CharacterModel
 import com.example.rickandmortyexample.databinding.ItemRecyclerViewBinding
 
 class RecyclerAdapter(
-    private val callback: Callback
+    private val clickListener: ClickListener
 ) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
     private var characters: List<CharacterModel> = arrayListOf()
@@ -25,60 +22,42 @@ class RecyclerAdapter(
 
     }
 
-//    @SuppressLint("NotifyDataSetChanged")
-//    fun clearCharacterData() {
-//        characters.clear()
-//        notifyDataSetChanged()
-//    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): MyViewHolder {
-        return MyViewHolder(
-            ItemRecyclerViewBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ), callback
-        )
+        return MyViewHolder.from(parent)
     }
 
     override fun getItemCount(): Int {
         return characters.size
     }
 
-    interface Callback {
-        fun onItemClicked(item: CharacterModel)
-    }
-
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(characters[position])
+        holder.bind(characters[position], clickListener)
     }
 
-    class MyViewHolder(
-        binding: ItemRecyclerViewBinding,
-        private val callback: Callback
+    class MyViewHolder private constructor(
+        private val binding: ItemRecyclerViewBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val characterImage: ImageView = binding.imageRecyclerView
-        private val characterCard: CardView = binding.cardView
-        private val characterName: TextView = binding.tvNameRecyclerview
-        private val characterStatus: TextView = binding.tvStatusRecyclerview
-        private val characterSpecies: TextView = binding.tvSpeciesRecyclerview
-        private val characterLocation: TextView = binding.tvLocation
-
-        fun bind(characterModel: CharacterModel) {
-
-            characterName.text = characterModel.name
-            characterImage.load(characterModel.image)
-            characterSpecies.text = characterModel.species
-            characterStatus.text = characterModel.status
-            characterLocation.text = characterModel.location.name
-
-            characterCard.setOnClickListener {
-                callback.onItemClicked(characterModel)
+        companion object {
+            fun from(parent: ViewGroup): MyViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemRecyclerViewBinding.inflate(layoutInflater, parent, false)
+                return MyViewHolder(binding)
             }
+        }
+
+        fun bind(characterModel: CharacterModel, clickListener: ClickListener) {
+
+            binding.character = characterModel
+            binding.tvNameRecyclerview.text = characterModel.name
+            binding.imageRecyclerView.load(characterModel.image)
+            binding.tvSpeciesRecyclerview.text = characterModel.species
+            binding.tvStatusRecyclerview.text = characterModel.status
+            binding.tvLocation.text = characterModel.location.name
+            binding.clickListener = clickListener
 
         }
     }

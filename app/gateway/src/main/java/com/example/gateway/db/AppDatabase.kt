@@ -6,11 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.domain.entity.CharacterModel
+import com.example.domain.entity.Episode
 import com.example.domain.entity.TypeConverterEpisode
 import com.example.domain.entity.TypeConverterLocation
 import com.example.domain.entity.TypeConverterOrigin
 
-@Database(entities = [CharacterModel::class], version = 1)
+@Database(entities = [CharacterModel::class, Episode::class], version = 3)
 @TypeConverters(
     TypeConverterOrigin::class,
     TypeConverterLocation::class,
@@ -32,7 +33,7 @@ abstract class AppDatabase : RoomDatabase() {
             synchronized(this) {
 
                 INSTANCE = Room
-                    .databaseBuilder(context, AppDatabase::class.java, "character_db")
+                    .databaseBuilder(context, AppDatabase::class.java, "character_n_episodes_db")
                     .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .build()

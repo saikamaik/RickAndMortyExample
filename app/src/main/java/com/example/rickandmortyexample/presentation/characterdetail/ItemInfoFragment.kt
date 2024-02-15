@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.domain.entity.CharacterModel
+import com.example.rickandmortyexample.R
 import com.example.rickandmortyexample.databinding.FragmentItemInfoBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +20,6 @@ class ItemInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentItemInfoBinding
     private val viewModel: ItemInfoViewModel by viewModels()
-    private lateinit var characterModel: CharacterModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,14 +30,12 @@ class ItemInfoFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        for (page in 1..3) {
+            viewModel.getAllEpisodes(page)
+        }
         val characterId: Int = args.characterId
         initViewModel(characterId)
 
@@ -47,7 +45,17 @@ class ItemInfoFragment : Fragment() {
 
     }
 
-    val args: ItemInfoFragmentArgs by navArgs()
+    private val args: ItemInfoFragmentArgs by navArgs()
+
+    private fun sliceEpisodeString(episodeListOfStrings: List<String>): List<String> {
+
+        val slicedIdEpisodes: MutableList<String> = mutableListOf()
+        for (episode in episodeListOfStrings) {
+            val episodeNew = episode.substringAfterLast("/")
+            slicedIdEpisodes += episodeNew
+        }
+        return slicedIdEpisodes
+    }
 
     @SuppressLint("SetTextI18n")
     fun setUpCard(characterModel: CharacterModel) {
@@ -56,29 +64,50 @@ class ItemInfoFragment : Fragment() {
         binding.imageInfo.load(imgURL) {
             size(800, 800)
         }
-        binding.tvName.text = "Name: " + characterModel.name
-        binding.tvStatus.text = "Status: " + characterModel.status
-        binding.tvSpecies.text = "Species: " + characterModel.species
+        binding.tvName.text = getString(R.string.item_text_name) + characterModel.name
+        binding.tvStatus.text = getString(R.string.item_text_status) + characterModel.status
+        binding.tvSpecies.text = getString(R.string.item_text_species) + characterModel.species
 
         if (characterModel.type.isEmpty()) {
-            binding.tvType.text = "Type: ???"
+            binding.tvType.text = getString(R.string.item_text_type_unknown)
         } else {
-            binding.tvType.text = "Type: " + characterModel.type
+            binding.tvType.text = getString(R.string.item_text_type) + characterModel.type
         }
 
-        binding.tvGender.text = "Gender: " + characterModel.gender
-        binding.tvOrigin.text = "Origin: " + characterModel.origin.name
-        binding.tvLocation.text = "Location: " + characterModel.location.name
-        binding.tvEpisode.text = "Episode: " + characterModel.episode
+        binding.tvGender.text = getString(R.string.item_text_gender) + characterModel.gender
+        binding.tvOrigin.text = getString(R.string.item_text_origin) + characterModel.origin.name
+        binding.tvLocation.text =
+            getString(R.string.item_text_location) + characterModel.location.name
 
+        initViewModelEpisode(characterModel.episode)
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun setUpEpisodeList(episodeList: List<String>) {
+        episodeList.toString().substringAfter("[").substringBefore("]")
+        binding.tvEpisode.text = getString(R.string.item_text_episode) + episodeList
     }
 
     private fun initViewModel(id: Int) {
-
         viewModel.getOneCharacterFromDB(id).observe(viewLifecycleOwner) {
-            if (it != null)
-                characterModel = it
-            setUpCard(characterModel)
+            if (it != null) {
+                val characterModel = it
+                setUpCard(characterModel)
+            }
+        }
+    }
+
+    private fun initViewModelEpisode(episodeList: List<String>) {
+
+        var episodeList2: List<String> = mutableListOf()
+        val episodeIdList: List<String> = sliceEpisodeString(episodeList)
+        for (episodeId in episodeIdList) {
+            viewModel.getOneEpisodeFromDB(episodeId.toInt()).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    episodeList2 += it.name
+                    setUpEpisodeList(episodeList2)
+                }
+            }
         }
     }
 }

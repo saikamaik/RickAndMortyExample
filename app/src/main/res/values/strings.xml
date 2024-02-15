@@ -3,4 +3,14 @@
     <string name="character_photo">character photo</string>
     <string name="click_to_see_more">Click to see more</string>
     <string name="last_known_location">Last known location:</string>
+    <string name="item_text_name">Name: </string>
+    <string name="item_text_status">Status: </string>
+    <string name="item_text_species">Species: </string>
+    <string name="item_text_type_unknown">Unknown: </string>
+    <string name="item_text_type">Type: </string>
+    <string name="item_text_gender">Gender: </string>
+    <string name="item_text_origin">Origin: </string>
+    <string name="item_text_location">Location: </string>
+    <string name="item_text_episode">Episode: </string>
+
 </resources>

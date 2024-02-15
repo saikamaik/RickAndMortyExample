@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.domain.entity.CharacterModel
+import com.example.rickandmortyexample.adapter.ClickListener
 import com.example.rickandmortyexample.adapter.RecyclerAdapter
 import com.example.rickandmortyexample.databinding.FragmentMainPageBinding
 import com.example.secondgallery.adapter.PaginationScrollListener
@@ -23,15 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainPageFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPageBinding
-
     private val viewModel: MainPageViewModel by viewModels()
-
-    private lateinit var adapter: RecyclerAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var linearLayoutManager: GridLayoutManager
-    private lateinit var progressBar: ProgressBar
-    private var page: Int = 1
-
+    private var adapter: RecyclerAdapter = RecyclerAdapter(ClickListener {
+        viewModel.onCardClicked(it)
+    })
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,20 +39,15 @@ class MainPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
         initRecyclerAdapter()
         initViewModel()
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        adapter = RecyclerAdapter(object : RecyclerAdapter.Callback {
-            override fun onItemClicked(item: CharacterModel) {
-                navigateToCharactersDetailFragment(item)
+        viewModel.navigateToItemInfo.observe(viewLifecycleOwner, ) {
+            id ->
+            id?.let {
+                navigateToCharactersDetailFragment(id)
             }
-        })
+        }
 
     }
 
@@ -69,45 +59,41 @@ class MainPageFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }
-        viewModel.loadNextPageOfData(page)
-    }
-
-    private fun setUpLayoutManager(spanCount: Int = 1, spanCountLand: Int = 2) {
-        linearLayoutManager = GridLayoutManager(this.context, spanCount)
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            linearLayoutManager = GridLayoutManager(this.context, spanCountLand)
-        }
+        viewModel.loadNextPageOfData()
     }
 
     private fun initRecyclerAdapter() {
-        setUpLayoutManager()
+
+        val recyclerView: RecyclerView = binding.recyclerview
+        val progressBar: ProgressBar = binding.progressbar
+        progressBar.isVisible = false
+
+        var linearLayoutManager = GridLayoutManager(this.context, 1)
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            linearLayoutManager = GridLayoutManager(this.context, 2)
+        }
+
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
 
         recyclerView.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager) {
             override fun loadMoreItems() {
                 progressBar.isVisible = true
-                page++
-                viewModel.loadNextPageOfData(page)
+                viewModel.loadNextPageOfData()
                 progressBar.isVisible = false
             }
         })
+
     }
 
-    fun initViews() {
-        recyclerView = binding.recyclerview
-        progressBar = binding.progressbar
-        progressBar.isVisible = false
-    }
+    private fun navigateToCharactersDetailFragment(id: Int) {
 
-    fun navigateToCharactersDetailFragment(characterModel: CharacterModel) {
-
-            val action = MainPageFragmentDirections.actionMainPageFragmentToItemInfoFragment(
-                characterModel.id
-            )
-
+        val action = MainPageFragmentDirections.actionMainPageFragmentToItemInfoFragment(
+            id
+        )
         findNavController().navigate(action)
+        viewModel.doneNavigating()
 
     }
 
