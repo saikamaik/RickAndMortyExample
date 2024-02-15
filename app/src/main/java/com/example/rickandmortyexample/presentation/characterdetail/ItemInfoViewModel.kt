@@ -1,7 +1,6 @@
 package com.example.rickandmortyexample.presentation.characterdetail
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.entity.CharacterModel
 import com.example.domain.entity.Episode
@@ -14,14 +13,12 @@ class ItemInfoViewModel @Inject constructor(
     private val repository: CharacterRepository
 ) : ViewModel() {
 
-    private var liveDataEpisodeList: MutableLiveData<List<Episode>> = MutableLiveData()
-
     fun getOneCharacterFromDB(id: Int): LiveData<CharacterModel> {
         return repository.getOneCharacterFromDB(id)
     }
 
     fun getAllEpisodes(page: Int) {
-        repository.getAllEpisodesByPage(liveDataEpisodeList, page)
+        repository.getAllEpisodesByPage(page)
     }
 
     fun getOneEpisodeFromDB(id: Int): LiveData<Episode>{

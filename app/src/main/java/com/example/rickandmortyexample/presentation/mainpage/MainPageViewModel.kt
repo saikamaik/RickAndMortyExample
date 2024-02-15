@@ -14,14 +14,13 @@ class MainPageViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var page: Int = 1
-    private var liveDataList: MutableLiveData<List<CharacterModel>?> = MutableLiveData()
 
     fun getAllCharacterData(): LiveData<List<CharacterModel>> {
         return repository.getAllCharactersFromDB()
     }
 
     fun loadNextPageOfData() {
-        repository.getCharactersByPage(liveDataList, page)
+        repository.getCharactersByPage(page)
         page++
     }
 
@@ -36,10 +35,6 @@ class MainPageViewModel @Inject constructor(
     fun onCardClicked(id: Int) {
         _navigateToItemInfo.value = id
     }
-
-    //        override fun onItemClicked(item: CharacterModel) {
-//            navigateToCharactersDetailFragment(item)
-//        }
 
 
 }

@@ -18,8 +18,7 @@ class RecyclerAdapter(
     fun setCharacterData(
         characters: List<CharacterModel>
     ) {
-        this.characters += characters
-
+        this.characters = characters
     }
 
     override fun onCreateViewHolder(
