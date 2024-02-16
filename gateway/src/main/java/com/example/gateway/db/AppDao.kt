@@ -5,31 +5,31 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.domain.entity.CharacterModel
-import com.example.domain.entity.Episode
+import com.example.data.dao.entity.CharacterDAO
+import com.example.data.dao.entity.EpisodeDAO
 
 @Dao
 interface AppDao {
 
-    @Query("SELECT * FROM charactermodel")
-    fun getAllCharacters(): LiveData<List<CharacterModel>>
+    @Query("SELECT * FROM characterdao")
+    fun getAllCharacters(): LiveData<List<CharacterDAO>>
 
-    @Query("SELECT * FROM episode")
-    fun getAllEpisodes(): LiveData<List<Episode>>
+    @Query("SELECT * FROM episodedao")
+    fun getAllEpisodes(): LiveData<List<EpisodeDAO>>
 
-    @Query("SELECT * FROM charactermodel WHERE id = :characterId")
-    fun getOneCharacters(characterId: Int): LiveData<CharacterModel>
+    @Query("SELECT * FROM characterdao WHERE id = :characterId")
+    fun getOneCharacters(characterId: Int): LiveData<CharacterDAO>
 
-    @Query("SELECT * FROM episode WHERE id = :episodeId")
-    fun getOneEpisode(episodeId: Int): LiveData<Episode>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertCharacters(characterModel: CharacterModel)
+    @Query("SELECT * FROM episodedao WHERE id = :episodeId")
+    fun getOneEpisode(episodeId: Int): LiveData<EpisodeDAO>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertEpisodes(episode: Episode)
+    fun insertCharacters(characterDAO: CharacterDAO)
 
-    @Query("DELETE FROM charactermodel")
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertEpisodes(episodeDAO: EpisodeDAO)
+
+    @Query("DELETE FROM characterdao")
     fun deleteAllCharacters()
 
 }

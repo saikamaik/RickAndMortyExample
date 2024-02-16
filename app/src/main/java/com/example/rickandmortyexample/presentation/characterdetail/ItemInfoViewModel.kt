@@ -2,8 +2,8 @@ package com.example.rickandmortyexample.presentation.characterdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.data.dao.entity.EpisodeDAO
 import com.example.domain.entity.CharacterModel
-import com.example.domain.entity.Episode
 import com.example.gateway.remoteDataSource.CharacterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,10 +21,8 @@ class ItemInfoViewModel @Inject constructor(
         repository.getAllEpisodesByPage(page)
     }
 
-    fun getOneEpisodeFromDB(id: Int): LiveData<Episode>{
+    fun getOneEpisodeFromDB(id: Int): LiveData<EpisodeDAO>{
         return repository.getOneEpisodeFromDB(id)
     }
-
-
 
 }

@@ -5,13 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.domain.entity.CharacterModel
-import com.example.domain.entity.Episode
-import com.example.domain.entity.TypeConverterEpisode
-import com.example.domain.entity.TypeConverterLocation
-import com.example.domain.entity.TypeConverterOrigin
+import com.example.data.dao.entity.CharacterDAO
+import com.example.data.dao.entity.EpisodeDAO
+import com.example.data.dao.entity.TypeConverterEpisode
+import com.example.data.dao.entity.TypeConverterLocation
+import com.example.data.dao.entity.TypeConverterOrigin
 
-@Database(entities = [CharacterModel::class, Episode::class], version = 3)
+@Database(entities = [CharacterDAO::class, EpisodeDAO::class], version = 4)
 @TypeConverters(
     TypeConverterOrigin::class,
     TypeConverterLocation::class,

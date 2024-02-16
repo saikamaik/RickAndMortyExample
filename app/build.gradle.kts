@@ -56,6 +56,7 @@ android {
 
 dependencies {
 
+    implementation(project(":data"))
     val nav_version = "2.7.7"
     val room_version = "2.6.1"
 

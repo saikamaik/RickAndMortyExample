@@ -1,6 +1,11 @@
 package com.example.gateway.remoteDataSource
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
+import com.example.data.dao.entity.EpisodeDAO
+import com.example.data.dao.entity.toCharacterDAO
+import com.example.data.dao.entity.toCharacterModel
+import com.example.data.dao.entity.toEpisodeDAO
 import com.example.domain.entity.APIResponseCharacter
 import com.example.domain.entity.APIResponseEpisode
 import com.example.domain.entity.CharacterModel
@@ -17,23 +22,22 @@ class CharacterRepository @Inject constructor(
 ) {
 
     fun getAllCharactersFromDB(): LiveData<List<CharacterModel>>{
-        return appDao.getAllCharacters()
+        return appDao.getAllCharacters().map { it -> it.map { it.toCharacterModel() } }
     }
 
     fun getOneCharacterFromDB(id: Int): LiveData<CharacterModel>{
-        return appDao.getOneCharacters(id)
-    }
+        return appDao.getOneCharacters(id).map { it.toCharacterModel() } }
 
-    fun getOneEpisodeFromDB(episodeId: Int) : LiveData<Episode> {
+    fun getOneEpisodeFromDB(episodeId: Int) : LiveData<EpisodeDAO> {
         return appDao.getOneEpisode(episodeId)
     }
 
     fun insertCharacters(characterModel: CharacterModel) {
-        appDao.insertCharacters(characterModel)
+        appDao.insertCharacters(characterModel.toCharacterDAO())
     }
 
     fun insertEpisodes(episode: Episode) {
-        appDao.insertEpisodes(episode)
+        appDao.insertEpisodes(episode.toEpisodeDAO())
     }
 
     fun getCharactersByPage(page: Int) {
